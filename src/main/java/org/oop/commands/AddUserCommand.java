@@ -42,6 +42,7 @@ public class AddUserCommand extends BaseCommand {
         return new UserMenu();
     }
 
+    //DRY: повторяющийся код для получения ввода от пользователя с проверкой на "back"
     private Optional<String> promptOrReturn(String message) {
         String input = ioService.prompt(message);
         if ("back".equalsIgnoreCase(input)) {
@@ -50,6 +51,8 @@ public class AddUserCommand extends BaseCommand {
         return Optional.of(input);
     }
 
+    //DRY: повторяющийся код для получения ввода от пользователя с проверкой на "back"
+    //KISS: рекурсия увеличивает сложность кода
     private Optional<Role> choiceRoleOrReturn(String message) {
         String input = ioService.prompt(message);
         if ("back".equalsIgnoreCase(input)) {
@@ -65,6 +68,8 @@ public class AddUserCommand extends BaseCommand {
     }
 
     @Override
+    //YAGNI: эта строка используется только для отображения описания команды ->
+    //её можно непосредственно прописать в коде
     public String getDescription() {
         return "Добавить нового пользователя";
     }

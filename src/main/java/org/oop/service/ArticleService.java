@@ -18,6 +18,8 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
+    //DRY: Повторяющийся код при получении authorId
+    //KISS: Усложненная проверка authorId == -1
     public Article createArticle(String title, String content) {
         long authorId = authService.getCurrentUserId();
         Article newArticle = new Article(0L, title, content, authorId == -1 ? 0L : authorId);
@@ -40,6 +42,7 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
+    //DRY: Повторяющийся код при получении authorId
     public boolean updateArticle(long id, String title, String content) {
         Article article = articleDao.getArticleById(id);
         if (article == null) {

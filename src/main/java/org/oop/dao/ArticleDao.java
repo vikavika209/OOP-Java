@@ -10,6 +10,7 @@ import java.util.List;
 public class ArticleDao extends Dao implements IArticleDao {
 
     @Override
+    //DRY: Повторение кода для обработки SQL-запросов
     public Article createArticle(Article article) {
         String query = "INSERT INTO articles (title, content, author_id) VALUES (?, ?, ?)";
         try (Connection connection = getConnection();
@@ -24,6 +25,9 @@ public class ArticleDao extends Dao implements IArticleDao {
                 throw new SQLException("Creating article failed, no rows affected.");
             }
 
+            //KISS: Можно упростить обработку ошибок,
+            // например, выбрасывая исключение напрямую,
+            // без использования дополнительной проверки next()
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     article.setId(generatedKeys.getLong(1));
@@ -40,6 +44,7 @@ public class ArticleDao extends Dao implements IArticleDao {
     }
 
     @Override
+    //DRY: Повторение кода для обработки SQL-запросов
     public Article getArticleById(long id) {
         String query = "SELECT id, title, content, author_id FROM articles WHERE id = ?";
         try (Connection connection = getConnection();
@@ -48,6 +53,8 @@ public class ArticleDao extends Dao implements IArticleDao {
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
+                    //DRY: Повторение кода для создания объектов Article
+                    //DRY: В нескольких местах создаются объекты Article с одинаковой логикой
                     return new Article(
                             resultSet.getLong("id"),
                             resultSet.getString("title"),
@@ -63,6 +70,8 @@ public class ArticleDao extends Dao implements IArticleDao {
     }
 
     @Override
+    //DRY: Повторение кода для обработки SQL-запросов
+    //YAGNI: под вопросом востребованность такой специфической выборки, как статьи по заголовку
     public List<Article> getArticlesByTitle(String title) {
         List<Article> articles = new ArrayList<>();
         String query = "SELECT id, title, content, author_id FROM articles WHERE title LIKE ?";
